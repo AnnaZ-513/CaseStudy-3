@@ -2,7 +2,7 @@ clear; clc; close all;
 
 %function [img,x,y] = rays2img(rays_x,rays_y,width,Npixels)
 load('lightField.mat');
-imshow(rays2img(rays(1,:),rays(3,:),0.1,1000));
+imshow(rays2img(rays(1,:),rays(3,:),0.01,700));
 %1.
 % a) Image is blurry but there is a slightly discernable shape. However, the
 %sides of the shape are not well defined and are grainy. It looks like an
@@ -17,22 +17,12 @@ imshow(rays2img(rays(1,:),rays(3,:),0.1,1000));
 %perfectly shown, the pixel amount does not make a change. An unclear image
 %will not suddenly become clear if you increase the amount of pixels. 
 
-x = rays(1,:);  
-y = rays(3,:);      
-
-N = length(y); 
+N = length(rays); 
 angles = linspace(-pi/20, pi/20, N);
 
 d = 0.00001;   
 
-original = zeros(4,N);
-
-for i = 1:N
-    original(1,i) = x(i);
-    original(2,i) = angles(i);
-    original(3,i) = y(i);
-    original(4,i) = angles(i);
-end
+original = rays;
 
 
 Md = [1 d 0 0; 0 1 0 0; 0 0 1 d; 0 0 0 1];
@@ -53,15 +43,16 @@ imshow(rays2img(final(1,:),final(3,:),0.1,1000));
 %because a real camera has a lens that creates a focal point that then
 %shows an image. 
 
-r = 1; %m
+r = 0.02; %m Can see Bruno in this one
+r = 0.1; %Overlapped images
 
-d2 = 0.2   %dist from lens to image
-f = 0.1
+d2 = 0.24; %dist from lens to image
+f = 0.15;
 
-d1 = ((1/f) - (1/d2))^-1 %distance from object to lens 
+d1 = ((1/f) - (1/d2))^-1; %distance from object to lens 
 
 
-Md1 = [1 d1 0 0; 0 1 0 0; 0 0 1 d1; 0 0 0 1];
+Md1 = eye(length(Md));
 Md2 = [1 d2 0 0; 0 1 0 0; 0 0 1 d2; 0 0 0 1];
 
 Mf = [1 0 0 0; -1/f 1 0 0; 0 0 1 0; 0 0 -1/f 1];
@@ -70,9 +61,13 @@ rays_at_lens = Md1 * original;
 
 hits = abs(rays_at_lens(1,:)) <= r;
 
-%rays_after_lens = Mf * rays_at_lens(:, hits);  
-rays_after_lens = Mf * rays_at_lens;  
+rays_after_lens = Mf * rays_at_lens(:, hits);  
 rays_final = Md2 * rays_after_lens; 
 
 figure;
-imshow(rays2img(rays_final(1,:),rays_final(3,:),0.1,1000));
+imshow(rays2img(rays_final(1,:),rays_final(3,:),0.003,375));
+%2.3 I used d = 0.25 and f = 0.15. The image appears to be 
+% Professor Sinopoli
+%six ways to change. Sensor width has set anmount of light but then it must
+%be distributed amongst all the pixels. So if wider sensor, then more
+%light, but if few pixels, then the image is extremely bright. 
