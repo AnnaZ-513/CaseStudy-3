@@ -47,7 +47,7 @@ legend('x = 0 mm','x = 10 mm');
 
 f= 0.15; %m
 r = 0.02; %m
-z_dist = 0.2 %m
+z_dist = 0.2; %m
 
 d1 = z_dist;    
 c = 0.4;
@@ -60,7 +60,7 @@ Mf = [1 0 0 0; -1/f 1 0 0; 0 0 1 0; 0 0 -1/f 1];
 
 rays_at_lens = Md1 * original;
 
-hits = abs(rays_at_lens(1,:)) <= r
+hits = abs(rays_at_lens(1,:)) <= r;
 
 
 rays_after_lens = Mf * rays_at_lens(:, hits);  
