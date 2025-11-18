@@ -1,4 +1,6 @@
-clear; clc; close all;
+clear; 
+clc; 
+close all;
 
 
 x = [0, 10e-3];  
