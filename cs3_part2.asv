@@ -2,7 +2,6 @@ clear; clc; close all;
 
 %function [img,x,y] = rays2img(rays_x,rays_y,width,Npixels)
 load('lightField.mat');
-imshow(rays2img(rays(1,:),rays(3,:),0.05,500));
+imshow(rays2img(rays(1,:),rays(3,:),0.005,500));
 %Image is blurry but there is a slightly discernable shape. However, the
-%sides of the shape are not well defined and are grainy. It looks like an
-%upside down fish or a vase. 
+%sides of the shape are
