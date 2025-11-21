@@ -3,9 +3,7 @@ close all;
 
 scale = 0.001; % Define the scale factor for the objects
 
-N = 8;
-
-angles = linspace(-pi/20,pi/20, N);
+angles = linspace(-pi/20,pi/20, 8);
 
 y = zeros(size(angles)); theta_y = zeros(size(angles));
 
@@ -71,7 +69,7 @@ blue_hits = hits(1:N);
 red_hits = hits(N+1:end);       
 
 z1 = [0; d1];
-x1_all = [rays_in(1,:); rays_at_lens(1,:)];
+x1_all = [original(1,:); rays_at_lens(1,:)];
 
 plot(z1, x1_all(:,1:N), 'b', 'LineWidth', 1.3);    
 plot(z1, x1_all(:,N+1:end), 'r', 'LineWidth', 1.3); 
