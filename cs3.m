@@ -1,106 +1,101 @@
 clear;
 close all;
 
+
+
+
+%% Section 1.4: Part 1
+
 scale = 0.001; % Define the scale factor for the objects
 
-N = 8;
+N = 8; % This is the number of rays we want to graph
 
-angles = linspace(-pi/20,pi/20, N);
+angles = linspace(-pi/20,pi/20, N); % Create a vector of all the ray angles we want to test
 
 y = zeros(size(angles)); theta_y = zeros(size(angles));
 
-x_1 = 0; x_2 = 10;
+x_1 = 0; x_2 = 10; % Starting x-coordinates for the two objects
 
-d = 0.2;
+d = 0.2; % defining the distance we are observing the rays traveling (in meters)
 
-M_d = [1, d, 0, 0; 
-       0, 1, 0, 0;
-       0, 0, 1, d;
-       0, 0, 0, 1];
+M_d1 = [1, d, 0, 0; % Creating the 3D ray-transfer matrix
+        0, 1, 0, 0;
+        0, 0, 1, d;
+        0, 0, 0, 1];
 
-object_1 = [x_1 * scale * ones(size(angles));
+rays_in_obj1 = [x_1 * scale * ones(size(angles)); % Make the 4 x N matrix for the first objects
                   angles;
                      y;
                   theta_y];
 
-object_2 = [x_2 * scale * ones(size(angles));
+rays_in_obj2 = [x_2 * scale * ones(size(angles)); % Make the 4 x N matrix for the Second objects
                     angles;
                       y;
                     theta_y];
 
-rays_in = [object_1, object_2];
+rays_out_obj1 = M_d1 * rays_in_obj1; % Calculating the resultant 
+rays_out_obj2 = M_d1 * rays_in_obj2;
 
-rays_out = M_d * rays_in;
-
-ray_z = [zeros(1, size(rays_in, 2)); d*ones(1, size(rays_in, 2))];
+ray_z1 = [zeros(1, size(rays_in_obj1, 2)); d*ones(1, size(rays_in_obj1, 2))];
+ray_z2 = [zeros(1, size(rays_in_obj2, 2)); d*ones(1, size(rays_in_obj2, 2))];
 
 figure; hold on;
 
-plot(ray_z(:, 1:size(object_1, 2)), [rays_in(1, 1:size(object_1, 2)); rays_out(1, 1:size(object_1, 2))], 'Color', 'blue');
-plot(ray_z(:, (size(object_1, 2) + 1):(size(object_1, 2) + size(object_2, 2))), [rays_in(1, (size(object_1, 2) + 1):(size(object_1, 2) + size(object_2, 2))); rays_out(1, (size(object_1, 2) + 1):(size(object_1, 2) + size(object_2, 2)))], 'Color', 'red');
+% sz_obj1 = size(object_1, 2);
+% sz_obj2 = size(object_2, 2);
+% Plot the rays for object 1
+plot(ray_z1, [rays_in_obj1(1, :); rays_out_obj1(1, :)], 'Color', 'blue');
+% Plot the rays for object 2
+plot(ray_z2, [rays_in_obj2(1, :); rays_out_obj2(1, :)], 'Color', 'red');
 
 
 
+%% Section 1.4: Part 2
 
-f= 0.15; %m
-r = 0.02; %m
-z_dist = 0.2; %m
+figure; hold on
 
-d1 = z_dist;    
-c = 0.4;
-d2 = c - d1; 
+% Re-plot the rays from figure 1 so we can compare them in one figure like
+% on the assignment
 
-Md1 = [1 d1 0 0; 0 1 0 0; 0 0 1 d1; 0 0 0 1];
-Md2 = [1 d2 0 0; 0 1 0 0; 0 0 1 d2; 0 0 0 1];
+% Plot the rays for object 1
+plot(ray_z1, [rays_in_obj1(1, :); rays_out_obj1(1, :)], 'Color', 'blue');
+% Plot the rays for object 2
+plot(ray_z2, [rays_in_obj2(1, :); rays_out_obj2(1, :)], 'Color', 'red');
 
-Mf = [1 0 0 0; -1/f 1 0 0; 0 0 1 0; 0 0 -1/f 1];
+d_2 = 0.5; 
 
-rays_at_lens = Md1 * rays_in;
+f = 150 * scale; % Define lens focal length
 
-hits = abs(rays_at_lens(1,:)) <= r;
+r_lens = 20 * scale;
+
+M_d2 = [1, d_2, 0, 0; % creating the 3D ray-transfer matrix for the second part
+        0, 1, 0, 0;
+        0, 0, 1, d_2;
+        0, 0, 0, 1];
+
+M_f = [   1,    0,    0,    0; % Creating the focal point transfer matrix
+       (-1/f),  1,    0,    0;
+          0,    0     1,    0;
+          0,    0, (-1/f),  1];
+
+M = M_d1 * M_d2 * M_f; % Calculating the entire transfer matrix
+
+rays_in_obj1_new = rays_out_obj1(:, abs(rays_out_obj1(1,:)) <= r_lens); % filtering out the rays that didn't hit the lens using logical indexing
+rays_in_obj2_new = rays_out_obj2(:, abs(rays_out_obj2(1,:)) <= r_lens);
 
 
-rays_after_lens = Mf * rays_at_lens(:, hits);  
-rays_final = Md2 * rays_after_lens;             
+rays_out_obj1_new = M * rays_in_obj1_new; % Basically same process as part one now
+rays_out_obj2_new = M * rays_in_obj2_new;
 
-figure; 
-hold on; 
+ray_z1_new = [ray_z1(2, 1:size(rays_in_obj1_new, 2)); d_2 * ones(1, size(rays_in_obj1_new, 2))];
+ray_z2_new = [ray_z2(2, 1:size(rays_in_obj2_new, 2)); d_2 * ones(1, size(rays_in_obj2_new, 2))];
 
 
-blue_hits = hits(1:N);         
-red_hits = hits(N+1:end);       
 
-z1 = [0; d1];
-x1_all = [rays_in(1,:); rays_at_lens(1,:)];
+% Plot the rays for the new object 1
+plot(ray_z1_new, [rays_in_obj1_new(1, :); rays_out_obj1_new(1, :)], 'Color', 'blue');
+% Plot the rays for the new object 2
+plot(ray_z2_new, [rays_in_obj2_new(1, :); rays_out_obj2_new(1, :)], 'Color', 'red');
 
-plot(z1, x1_all(:,1:N), 'b', 'LineWidth', 1.3);    
-plot(z1, x1_all(:,N+1:end), 'r', 'LineWidth', 1.3); 
 
-z2 = [d1; d1+d2];
 
-blue_count = 0;
-for i = 1:N
-    if blue_hits(i)
-        blue_count = blue_count + 1;
-        x_lens = rays_at_lens(1,i);
-        x_final = rays_final(1,blue_count);
-        
-        plot([d1, d1+d2], [x_lens, x_final], 'b', 'LineWidth', 1.3);
-    end
-end
-
-red_count = 0;
-for i = 1:N
-    if red_hits(i)
-        red_count = red_count + 1;
-        x_lens = rays_at_lens(1,N+i);
-        x_final = rays_final(1,blue_count + red_count);
-        
-        plot([d1, d1+d2], [x_lens, x_final], 'r', 'LineWidth', 1.3);
-    end
-end
-
-xlabel('z (m)');
-ylabel('x (m)');
-title('Rays through lens');
-legend('x=0mm', 'x=10mm');
