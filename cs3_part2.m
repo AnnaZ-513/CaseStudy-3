@@ -59,7 +59,7 @@ Mf = [1 0 0 0; -1/f 1 0 0; 0 0 1 0; 0 0 -1/f 1];
 
 rays_at_lens = Md1 * original;
 
-hits = abs(rays_at_lens(1,:)) <= r;
+hits = abs(rays_at_lens(1,:)) <= r; %change this to make the radius not centered at zero
 
 rays_after_lens = Mf * rays_at_lens(:, hits);  
 rays_final = Md2 * rays_after_lens; 
