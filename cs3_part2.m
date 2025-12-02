@@ -52,22 +52,28 @@ f = 0.15;
 d1 = ((1/f) - (1/d2))^-1; %distance from object to lens 
 
 
-Md1 = eye(length(Md));
 Md2 = [1 d2 0 0; 0 1 0 0; 0 0 1 d2; 0 0 0 1];
 
 Mf = [1 0 0 0; -1/f 1 0 0; 0 0 1 0; 0 0 -1/f 1];
 
-rays_at_lens = Md1 * original;
+rays_at_lens = original;
 
-hits = abs(rays_at_lens(1,:)) <= r; %change this to make the radius not centered at zero
+hits = abs(rays_at_lens(1,:)) + 0.08 <= r; %change this to make the radius not centered at zero
 
 rays_after_lens = Mf * rays_at_lens(:, hits);  
 rays_final = Md2 * rays_after_lens; 
 
 figure;
 imshow(rays2img(rays_final(1,:),rays_final(3,:),0.003,375));
+
 %2.3 I used d = 0.25 and f = 0.15. The image appears to be 
 % Professor Sinopoli
 %six ways to change. Sensor width has set anmount of light but then it must
 %be distributed amongst all the pixels. So if wider sensor, then more
 %light, but if few pixels, then the image is extremely bright. 
+figure;
+
+hits2 = (abs(rays_at_lens(1,:)) <= r); 
+rays_after = Mf * rays_at_lens(:, hits2);
+rays_final = Md2 * rays_after_lens; 
+imshow(rays2img(rays_final(1,:),rays_final(3,:),0.003,375));
