@@ -83,19 +83,15 @@ M = M_d1 * M_d2 * M_f; % Calculating the entire transfer matrix
 rays_in_obj1_new = rays_out_obj1(:, abs(rays_out_obj1(1,:)) <= r_lens); % filtering out the rays that didn't hit the lens using logical indexing
 rays_in_obj2_new = rays_out_obj2(:, abs(rays_out_obj2(1,:)) <= r_lens);
 
-
 rays_out_obj1_new = M * rays_in_obj1_new; % Basically same process as part one now
 rays_out_obj2_new = M * rays_in_obj2_new;
 
 ray_z1_new = [ray_z1(2, 1:size(rays_in_obj1_new, 2)); d_2 * ones(1, size(rays_in_obj1_new, 2))];
 ray_z2_new = [ray_z2(2, 1:size(rays_in_obj2_new, 2)); d_2 * ones(1, size(rays_in_obj2_new, 2))];
 
-
-
 % Plot the rays for the new object 1
 plot(ray_z1_new, [rays_in_obj1_new(1, :); rays_out_obj1_new(1, :)], 'Color', 'blue');
 % Plot the rays for the new object 2
 plot(ray_z2_new, [rays_in_obj2_new(1, :); rays_out_obj2_new(1, :)], 'Color', 'red');
-
 
 

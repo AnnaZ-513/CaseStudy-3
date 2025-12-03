@@ -73,7 +73,7 @@ imshow(rays2img(rays_final(1,:),rays_final(3,:),0.003,375));
 
 
 %Part 3
-%r = 0.02; %m Can see Bruno in this one
+r = 0.02; %m Can see Bruno in this one
 r = 0.1; %Overlapped images
 
 
@@ -91,11 +91,7 @@ Mf = [1 0 0 0; -1/f 1 0 0; 0 0 1 0; 0 0 -1/f 1];
 
 figure; 
 %rays_in_obj2_new = rays_out_obj2(:, abs(rays_out_obj2(1,:)) <= r_lens); 
-%[-0.01,0.01] gives sinopoli. THIS SIZE MAKES SENSE since the size of the
-%lens r that made it so we could ONLY see bruno was when it was 0.02, so
-%it had to be in the hundredths place so 0.01 was the natural step
-%[-1,-0.02] give the robot
-%[0.02,1] gives washu sign
+%[-0.01,0.01] gives the robot and washu sign without sinopoli
 
 hits2 = (abs(original(1,:)) <= r); 
 
@@ -104,11 +100,9 @@ rays_after = Mf * original(:, hits2);
 rays_final = Md2 * rays_after; 
 
 num = rays_final;
-lower = 0.02;
-upper = 1;
+lower = 0;
+upper = 0.1;
 
-%this for loop counts how many rays are between a specific angle. We then
-%create an array that's precisely that size of valid angles
 for r = 1:length(rays_final)
     if (rays_final(2, r) >= lower) && (rays_final(2, r) <=upper)
         num(2,r) = 1;
@@ -118,14 +112,16 @@ for r = 1:length(rays_final)
 end
 
 
-l=sum(num(2,:)); %calculating the sum of angles in the range
-final_angles = zeros(4,l); %(currently) empty array of filtered angles 
+l=sum(num(2,:));
+final_angles = zeros(4,l);
 
-count = 0;
+excess = zeros(length(rays_final)-l;
+
 for r = 1:length(rays_final)
     if (rays_final(2, r) >= lower) && (rays_final(2, r) <= upper)
-        count = count+1;
-        final_angles(:,count) = rays_final(:,r);
+        final_angles(:,r) = rays_final(:,r); 
+    else
+        excess
     end
 end
 
