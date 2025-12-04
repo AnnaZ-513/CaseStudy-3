@@ -20,7 +20,7 @@ imshow(rays2img(rays(1,:),rays(3,:),0.01,700));
 N = length(rays); 
 angles = linspace(-pi/20, pi/20, N);
 
-d = 0;   
+d = 0.00000001;   
 
 original = rays;
 
@@ -58,9 +58,12 @@ f = 0.15;
 d1 = ((1/f) - (1/d2))^-1; %distance from object to lens 
 
 
-Md2 = [1 d2 0 0; 0 1 0 0; 0 0 1 d2; 0 0 0 1];
+Md2 = [1 d2 0 0; 0 1 0 0; 0 0 1 d2; 0 0 0 1]; %matrix that bends rays to the sensor plane 
 
-Mf = [1 0 0 0; -1/f 1 0 0; 0 0 1 0; 0 0 -1/f 1];
+Mf = [1 0 0 0; -1/f 1 0 0; 0 0 1 0; 0 0 -1/f 1]; %matrix that bends rays at the lens
+
+%no Md1 since we don't know d1 and so it acts like the hologram is located
+%exactly at the lens
 
 hits = abs(original(1,:)) <= r; %change this to make the radius not centered at zero
 
