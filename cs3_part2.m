@@ -20,7 +20,7 @@ imshow(rays2img(rays(1,:),rays(3,:),0.01,700));
 N = length(rays); 
 angles = linspace(-pi/20, pi/20, N);
 
-d = 0.00000001;   
+d = 0.000000010;   
 
 original = rays;
 
