@@ -47,8 +47,9 @@ figure; hold on;
 plot(ray_z1, [rays_in_obj1(1, :); rays_out_obj1(1, :)], 'Color', 'blue');
 % Plot the rays for object 2
 plot(ray_z2, [rays_in_obj2(1, :); rays_out_obj2(1, :)], 'Color', 'red');
-
-
+title('Propagated rays');
+xlabel('z (m)');
+ylabel('x (m)');
 
 %% Section 1.4: Part 2
 
@@ -61,6 +62,9 @@ figure; hold on
 plot(ray_z1, [rays_in_obj1(1, :); rays_out_obj1(1, :)], 'Color', 'blue');
 % Plot the rays for object 2
 plot(ray_z2, [rays_in_obj2(1, :); rays_out_obj2(1, :)], 'Color', 'red');
+title('Propogated rays with lens');
+xlabel('z (m)');
+ylabel('x (m)');
 
 d_2 = 0.5; 
 
