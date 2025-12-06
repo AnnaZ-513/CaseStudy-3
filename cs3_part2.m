@@ -20,7 +20,7 @@ imshow(rays2img(rays(1,:),rays(3,:),0.01,700));
 N = length(rays); 
 angles = linspace(-pi/20, pi/20, N);
 
-d = 0;   
+d = 0.000000010;   
 
 original = rays;
 
@@ -46,7 +46,7 @@ imshow(rays2img(final(1,:),final(3,:),0.1,1000));
 %shows an image. 
 
 r = 0.02; %m Can see Bruno in this one
-r = 0.1; %Overlapped images
+r = 0.1; %Overlapped images. Or 0.045
 
 
 d2 = 0.24; %dist from lens to image
@@ -58,9 +58,12 @@ f = 0.15;
 d1 = ((1/f) - (1/d2))^-1; %distance from object to lens 
 
 
-Md2 = [1 d2 0 0; 0 1 0 0; 0 0 1 d2; 0 0 0 1];
+Md2 = [1 d2 0 0; 0 1 0 0; 0 0 1 d2; 0 0 0 1]; %matrix that bends rays to the sensor plane 
 
-Mf = [1 0 0 0; -1/f 1 0 0; 0 0 1 0; 0 0 -1/f 1];
+Mf = [1 0 0 0; -1/f 1 0 0; 0 0 1 0; 0 0 -1/f 1]; %matrix that bends rays at the lens
+
+%no Md1 since we don't know d1 and so it acts like the hologram is located
+%exactly at the lens
 
 hits = abs(original(1,:)) <= r; %change this to make the radius not centered at zero
 
@@ -76,7 +79,6 @@ imshow(rays2img(rays_final(1,:),rays_final(3,:),0.003,375));
 %r = 0.02; %m Can see Bruno in this one
 r = 0.1; %Overlapped images
 
-
 d2 = 0.24; %dist from lens to image
 f = 0.15;
 
@@ -91,7 +93,8 @@ Mf = [1 0 0 0; -1/f 1 0 0; 0 0 1 0; 0 0 -1/f 1];
 
 %rays_in_obj2_new = rays_out_obj2(:, abs(rays_out_obj2(1,:)) <= r_lens); 
 %[-0.02,0.02] gives sinopoli. THIS SIZE MAKES SENSE since the size of the
-%lens r that made it so we could ONLY see bruno was when it was 0.02
+%lens r that made it so we could ONLY see bruno was when it was 0.03.
+%Nevermind, that's not right. 
 %[-1,-0.02] give the robot
 %[0.02,1] gives washu sign
 
@@ -129,11 +132,10 @@ end
 sinopoli = createImage(-0.02,0.02,rays_final);
 robot = createImage(-1,-0.02,rays_final);
 washU = createImage(0.02,1,rays_final);
-figure;
-imshow(rays2img(sinopoli(1,:),sinopoli(3,:),0.003,375));
+
 figure;
 imshow(rays2img(robot(1,:),robot(3,:),0.003,375));
 figure;
+imshow(rays2img(sinopoli(1,:),sinopoli(3,:),0.003,375));
+figure;
 imshow(rays2img(washU(1,:),washU(3,:),0.003,375));
-
-
